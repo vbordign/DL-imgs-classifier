@@ -1,5 +1,6 @@
 # Image Classification: The Impact of Weight Sharing and Auxiliary Losses
 EPFL EE-559 Deep Learning: First Project, Spring 2021
+
 Author: Virginia Bordignon
 
 ## Requirements
