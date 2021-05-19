@@ -1,5 +1,6 @@
 # Image Classification: The Impact of Weight Sharing and Auxiliary Losses
 EPFL EE-559 Deep Learning: First Project, Spring 2021
+Author: Virginia Bordignon
 
 ## Requirements
 - Python 3.7.4
@@ -23,7 +24,7 @@ EPFL EE-559 Deep Learning: First Project, Spring 2021
 
 
 ## How to run test.py
-To evaluate the best trained model in the test set:
+To train and evaluate the best trained model in the test set:
 ```
 $ cd code && python test.py
 ```

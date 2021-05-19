@@ -3,7 +3,7 @@ from parameters import *
 from generate_data import *
 from models import *
 
-def train_val(model, train_loader, val_loader, nb_epochs, optimizer, criterion, scheduler, device, rho):
+def train_val(model, train_loader, val_loader, nb_epochs, optimizer, criterion, scheduler, device, rho, verbose = False):
     ''' Trains a model using one (or many) optimization criterion (criteria)
     for a certain number of epochs.
     Returns validation and training performance indicators over epochs.
@@ -42,7 +42,6 @@ def train_val(model, train_loader, val_loader, nb_epochs, optimizer, criterion, 
     loss_val = []
     acc_val = []
     for e in range(num_epochs):
-        loss_epoch = 0
         for feat, target in train_loader:
             output = model(feat.to(device))
             target = target.to(device)
@@ -53,8 +52,9 @@ def train_val(model, train_loader, val_loader, nb_epochs, optimizer, criterion, 
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
-            loss_epoch += loss.item() / len(train_loader)
             acc, loss_v = validate(model, val_loader, criterion, device, rho)
+        if verbose:
+            print(f'Epoch {e}: Train Loss {loss:.4f}, Validation Loss {loss_v:.4f}, Validation Accuracy {acc:.2f}')
         loss_train.append(loss)
         loss_val.append(loss_v)
         acc_val.append(acc)
@@ -183,6 +183,12 @@ def repeat_train(n_rounds, train_input, train_target, train_classes,
         loss_train, loss_val, acc_val = train_val(model.to(device), train_loader, val_loader, num_epochs, optimizer,
                                                   criterion, scheduler, device, rho)
         acc_test, loss_test = validate(model.to('cpu'), test_loader, criterion, 'cpu', rho)
+        print(f'Architecture {arch} and Kernel {kernel_conv[0]}, Run {i+1}: '
+                  f'Train Loss = {loss_train[-1]:.4f}, '
+                  f'Val. Accuracy = {acc_val[-1]:.2f}%, '
+                  f'Val. Loss = {loss_val[-1]:.4f}')
+
+
         loss_train_t[i] = torch.tensor(loss_train)
         loss_val_t[i] = torch.tensor(loss_val)
         acc_val_t[i] = torch.tensor(acc_val)
